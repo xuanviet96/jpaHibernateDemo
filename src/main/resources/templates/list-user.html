@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Employee Directory</title>
+</head>
+
+<body>
+
+<h3>Employee Directory</h3>
+<hr>
+<a href="/users/register"> Click here to register</a>
+<br>
+<br>
+<table border="1">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>First Name</th>
+    <th>Last Name<a th:href="@{${'?direction='+sortType}}"><span th:text="${sortTypeSymbol}"></span></a></th>
+    <th>Email</th>
+    <th>Age</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+
+  <tbody>
+
+  <tr th:each="tempUser : ${users}">
+    <td th:text="${tempUser.id}" />
+    <td th:text="${tempUser.firstName}" />
+    <td th:text="${tempUser.lastName}" />
+    <td th:text="${tempUser.email}" />
+    <td th:text="${tempUser.age}" />
+    <td>
+
+      <button name="employee[]" th:attr="onclick=|gotoEdit('${tempUser.id}')|">Edit</button>
+<!--      <button name="employee[]" th:attr="onclick=|gotoDelete('${tempUser.id}')|">Delete</button>-->
+      <form action="#" th:action="@{${'/users/delete/' + tempUser.id}}" th:object="${tempUser}" method="post">
+        <p><input type="submit" value="Delete" /></p>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<td>
+  <span th:if="${previousPage == 0}"></span>
+  <span th:unless="${previousPage == 0}"><a th:href="@{${'/users/list/' + previousPage}}">Previous</a></span>
+</td>
+
+<!--<span th:each="i: ${#numbers.sequence(1, pages)}">-->
+<!--  <a th:href="@{${'/users/list/' + page}}"><span th:text="${page}"></span></a>-->
+<!--</span>-->
+
+<th:block th:each="page : ${pages}">
+  <a th:href="@{${'/users/list/' + page}}"><span th:text="${page}"></span></a>
+</th:block>
+<td>
+  <span th:if="${nextPage == nextMaxPage}"></span>
+  <span th:unless="${nextPage == nextMaxPage}"><a th:href="@{${'/users/list/' + nextPage}}">Next</a></span>
+</td>
+<script>
+
+  // const editButtons = document.querySelectorAll('.classEmpl oyeeEdit');
+  // editButtons.forEach((el) => {
+  //   el.addEventListener('click', (e) => {
+  //     e.preventDefault();
+  //     const id = e.currentTarget.getAttribute('id');
+  //     if (!id) return;
+  //     location.href =  "/users/form-edit/" + id;
+  //   })
+  // })
+
+  function gotoEdit(id) {
+    location.href =  "/users/edit/" + id;
+  }
+  // function gotoDelete(id) {
+  //   location.href =  "/users/delete/" + id;
+  // }
+
+
+</script>
+</body>
+</html>
